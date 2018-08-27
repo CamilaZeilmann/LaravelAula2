@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mensagem;
 use Illuminate\Http\Request;
+use \Illuminate\Support\Facades\Validator;
 
 class MensagemController extends Controller
 {
@@ -25,7 +26,7 @@ class MensagemController extends Controller
      */
     public function create()
     {
-        //
+        return view ('mensagem.create');   
     }
 
     /**
@@ -36,7 +37,36 @@ class MensagemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //faço as validações dos campos
+        //vetor com as mensagens de erro
+        $messages = array(
+            'title.required' => 'É obrigatório um título para a mensagem',
+            'description.required' => 'É obrigatória uma descrição para a mensagem',
+            'autor.required' => 'É obrigatório o cadastro do autor da mensagem',
+        );
+        //vetor com as especificações de validações
+        $regras = array(
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'autor' => 'required',
+        );
+        //cria o objeto com as regras de validação
+        $validador = Validator::make($request->all(), $regras, $messages);
+
+        //executa as validações
+        if ($validador->fails()) {
+            return redirect('mensagens/create')
+            ->withErrors($validador)
+            ->withInput($request->all);
+        }
+        //se passou pelas validações, processa e salva no banco...
+        $obj_Atividade = new Atividade();
+        $obj_Atividade->title =       $request['title'];
+        $obj_Atividade->description = $request['description'];
+        $obj_Atividade->autor = $request['autor'];
+        $obj_Atividade->save();
+
+        return redirect('/mensagens')->with('success', 'Mensagem criada com sucesso!!');
     }
 
     /**

@@ -1,4 +1,4 @@
-<h1>Formulário de Cadastro de Atividade</h1>
+<h1>Formulário de Cadastro de Mensagens</h1>
 <hr>
 
 <!-- EXIBE MENSAGENS DE ERROS -->
@@ -15,11 +15,11 @@
   @endif
 
 
-<form action="/atividades" method="post">
+<form action="/mensagens" method="post">
 {{csrf_field() }}
 Título: <input type="text" name="title"> <br><br>
-Descrição <input type="text" name="description"> <br><br>
-Agendado para: <input type="datetime-local" name="scheduledto"> <br><br>
+Descrição: <input type="text" name="description"> <br><br>
+Autor: <input type="text" name="description"> <br><br>
 <input type="submit" value="Salvar">
 </form>
 

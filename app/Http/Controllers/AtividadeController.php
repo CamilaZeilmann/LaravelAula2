@@ -52,6 +52,7 @@ class AtividadeController extends Controller
         );
         //cria o objeto com as regras de validação
         $validador = Validator::make($request->all(), $regras, $messages);
+
         //executa as validações
         if ($validador->fails()) {
             return redirect('atividades/create')

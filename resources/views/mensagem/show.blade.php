@@ -6,3 +6,4 @@
 <h3><b>Autor:</b>{{$msg->autor}}</h3>
 <h3><b>Criada em:</b>{{\Carbon\Carbon::parse($msg->created_at)->format('d/m/Y h:m')}}</h3>
 <h3><b>Atualizada em:</b>{{\Carbon\Carbon::parse($msg->updated_at)->format('d/m/Y h:m')}}</h3>
+
