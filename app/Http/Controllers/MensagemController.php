@@ -41,13 +41,13 @@ class MensagemController extends Controller
         //vetor com as mensagens de erro
         $messages = array(
             'title.required' => 'É obrigatório um título para a mensagem',
-            'description.required' => 'É obrigatória uma descrição para a mensagem',
+            'texto.required' => 'É obrigatória uma descrição para a mensagem',
             'autor.required' => 'É obrigatório o cadastro do autor da mensagem',
         );
         //vetor com as especificações de validações
         $regras = array(
             'title' => 'required|string|max:255',
-            'description' => 'required',
+            'texto' => 'required',
             'autor' => 'required',
         );
         //cria o objeto com as regras de validação
@@ -60,11 +60,11 @@ class MensagemController extends Controller
             ->withInput($request->all);
         }
         //se passou pelas validações, processa e salva no banco...
-        $obj_Atividade = new Atividade();
-        $obj_Atividade->title =       $request['title'];
-        $obj_Atividade->description = $request['description'];
-        $obj_Atividade->autor = $request['autor'];
-        $obj_Atividade->save();
+        $obj_Mensagem = new Mensagem();
+        $obj_Mensagem->title =       $request['title'];
+        $obj_Mensagem->texto = $request['texto'];
+        $obj_Mensagem->autor = $request['autor'];
+        $obj_Mensagem->save();
 
         return redirect('/mensagens')->with('success', 'Mensagem criada com sucesso!!');
     }
@@ -87,10 +87,12 @@ class MensagemController extends Controller
      * @param  \App\Mensagem  $mensagem
      * @return \Illuminate\Http\Response
      */
-    public function edit(Mensagem $mensagem)
+     public function edit($id)
     {
-        //
+        $obj_Mensagem = Mensagem::find($id);
+        return view ('mensagem.edit',['mensagem'=> $obj_Mensagem]);
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -99,10 +101,38 @@ class MensagemController extends Controller
      * @param  \App\Mensagem  $mensagem
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Mensagem $mensagem)
+     public function update(Request $request, $id)
     {
-        //
+        //faço as validações dos campos
+        //vetor com as mensagens de erro
+        $messages = array(
+            'title.required' => 'É obrigatório um título para a mensagem',
+            'texto.required' => 'É obrigatória uma descrição para a mensagem',
+            'autor.required' => 'É obrigatório o cadastro do autor da mensagem',
+        );
+        //vetor com as especificações de validações
+        $regras = array(
+            'title' => 'required|string|max:255',
+            'texto' => 'required',
+            'autor' => 'required',
+        );
+        //cria o objeto com as regras de validação
+        $validador = Validator::make($request->all(), $regras, $messages);
+        //executa as validações
+        if ($validador->fails()) {
+            return redirect("mensagens/$id/edit")
+            ->withErrors($validador)
+            ->withInput($request->all);
+        }
+        //se passou pelas validações, processa e salva no banco...
+        $obj_mensagem = Mensagem::findOrFail($id);
+        $obj_mensagem->title =       $request['title'];
+        $obj_mensagem->texto = $request['texto'];
+        $obj_mensagem->autor = $request['autor'];
+        $obj_mensagem->save();
+        return redirect('/mensagens')->with('success', 'Mensagem alterada com sucesso!!');
     }
+
 
     /**
      * Remove the specified resource from storage.
