@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mensagem;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\Validator;
+use \Illuminate\Support\Facades\Auth;
+
 
 class MensagemController extends Controller
 {
@@ -15,8 +17,16 @@ class MensagemController extends Controller
      */
     public function index()
     {
-        $lista = Mensagem::all();
-        return view('mensagem.list',['mensagens' => $lista]);
+        if(Auth::check() ){
+
+            $listaMensagens = Mensagem::where('user_id', Auth::id() )->get();
+
+        }else{
+
+             $listaMensagens = Mensagem::all();
+        }
+
+        return view('mensagem.list',['mensagens' => $listaMensagens]);
     }
 
     /**
@@ -64,6 +74,7 @@ class MensagemController extends Controller
         $obj_Mensagem->title =       $request['title'];
         $obj_Mensagem->texto = $request['texto'];
         $obj_Mensagem->autor = $request['autor'];
+        $obj_Mensagem->user_id = Auth::id();
         $obj_Mensagem->save();
 
         return redirect('/mensagens')->with('success', 'Mensagem criada com sucesso!!');
@@ -129,6 +140,7 @@ class MensagemController extends Controller
         $obj_mensagem->title =       $request['title'];
         $obj_mensagem->texto = $request['texto'];
         $obj_mensagem->autor = $request['autor'];
+        $obj_mensagem->user_id = Auth::id();
         $obj_mensagem->save();
         return redirect('/mensagens')->with('success', 'Mensagem alterada com sucesso!!');
     }
