@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('content')
 <h1>Formulário de Cadastro de Mensagens</h1>
 <hr>
 
@@ -23,3 +26,4 @@ Autor: <input type="text" name="autor"> <br><br>
 <input type="submit" value="Salvar">
 </form>
 
+@endsection
